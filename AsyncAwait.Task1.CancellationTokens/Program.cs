@@ -60,7 +60,7 @@ internal class Program
             Console.WriteLine();
             Console.WriteLine("Enter N: ");
         }, TaskContinuationOptions.OnlyOnRanToCompletion);
-        sumTask.ContinueWith(_ => { Console.WriteLine($"Sum for {n} cancelled..."); },
+        sumTask.ContinueWith(_ => Console.WriteLine($"Sum for {n} cancelled..."),
             TaskContinuationOptions.OnlyOnCanceled);
         Console.WriteLine($"The task for {n} started... Enter N to cancel the request:");
     }
