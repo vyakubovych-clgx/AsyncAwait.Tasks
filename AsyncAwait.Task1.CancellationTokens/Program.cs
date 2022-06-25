@@ -53,17 +53,15 @@ internal class Program
     private static void CalculateSum(int n)
     {
         CancelCurrentCalculation();
-
-        Task.Run(() =>
-            {
-                var sum = Calculator.Calculate(n, _source.Token);
-                Console.WriteLine($"Sum for {n} = {sum}.");
-                Console.WriteLine();
-                Console.WriteLine("Enter N: ");
-            }, _source.Token)
-            .ContinueWith(_ => Console.WriteLine($"Sum for {n} cancelled..."),
-                TaskContinuationOptions.OnlyOnCanceled);
-
+        var sumTask = Calculator.Calculate(n, _source.Token);
+        sumTask.ContinueWith(t =>
+        {
+            Console.WriteLine($"Sum for {n} = {t.Result}.");
+            Console.WriteLine();
+            Console.WriteLine("Enter N: ");
+        }, TaskContinuationOptions.OnlyOnRanToCompletion);
+        sumTask.ContinueWith(_ => { Console.WriteLine($"Sum for {n} cancelled..."); },
+            TaskContinuationOptions.OnlyOnCanceled);
         Console.WriteLine($"The task for {n} started... Enter N to cancel the request:");
     }
 
